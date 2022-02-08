@@ -11,6 +11,9 @@
   </head>
 
   <body>
+    {{#if currentUser}}
+      <p>You are logged in: {{currentUser.username}}</p>
+    {{/if}}
     <div class="container">
       {{{body}}}
     </div>

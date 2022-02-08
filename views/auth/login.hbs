@@ -1,0 +1,16 @@
+<a href="/">Home</a>
+<div id="form">
+  <h2>Login</h2>
+  <form action="/login" method="POST">
+    <label> Username
+      <input type="text" name="username" placeholder="Introduce your username ..." />
+    </label>
+    <label>Password
+      <input type="password" name="password" placeholder="Introduce your password ..." />
+    </label>
+    <button type="submit">Login</button>
+    {{#if errorMessage}}
+      <p class="error">{{errorMessage}}</p>
+    {{/if}}
+  </form>
+</div>

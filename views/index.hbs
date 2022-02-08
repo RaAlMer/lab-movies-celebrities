@@ -1,4 +1,12 @@
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
-<a href="/celebrities">Go to celebrities</a>
-<a href="/movies">Go to movies</a>
+{{#if userInSession}}
+    <a href="/celebrities">Go to celebrities</a><span> | </span>
+    <a href="/movies">Go to movies</a>
+    <form action="/logout" method="post">
+        <button type="submit">Log out</button>
+    </form>
+{{else}}
+    <a href="/signup">Sign Up</a><span> | </span>
+    <a href="/login">Login</a>
+{{/if}}

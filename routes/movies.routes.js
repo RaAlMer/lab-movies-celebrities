@@ -4,8 +4,10 @@ const router = require("express").Router();
 const Movie = require('../models/Movie.model');
 const Celebrity = require('../models/Celebrity.model');
 
+const { isLoggedIn, isLoggedOut } = require('../middleware/route-guard');
+
 // GET route to create a movie
-router.get('/movies/create', (req, res) => {
+router.get('/movies/create', isLoggedIn, (req, res) => {
     Celebrity.find()
     .then((dbCelebrities) => {
         res.render('movies/new-movie.hbs', {dbCelebrities});
@@ -13,7 +15,7 @@ router.get('/movies/create', (req, res) => {
 });
 
 // POST route to save a new movie to the database
-router.post('/movies/create', (req, res, next) => {
+router.post('/movies/create', isLoggedIn, (req, res, next) => {
     const { title, genre, plot, cast } = req.body;
     Movie.create({ title, genre, plot, cast })
         .then(() => res.redirect('/movies'))
@@ -21,7 +23,7 @@ router.post('/movies/create', (req, res, next) => {
 });
 
 // GET route to update a specific movie
-router.get('/movies/:id/edit', (req, res, next) => {
+router.get('/movies/:id/edit', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   let movie;
  
@@ -38,7 +40,7 @@ router.get('/movies/:id/edit', (req, res, next) => {
 });
 
 // POST route to update a specific movie
-router.post('/movies/:id/edit', (req, res, next) => {
+router.post('/movies/:id/edit', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   const { title, genre, plot, cast } = req.body;
  
@@ -48,7 +50,7 @@ router.post('/movies/:id/edit', (req, res, next) => {
 });
 
 // POST route to delete a movie from the database
-router.post('/movies/:id/delete', (req, res, next) => {
+router.post('/movies/:id/delete', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
  
   Movie.findByIdAndRemove(id)
@@ -57,7 +59,7 @@ router.post('/movies/:id/delete', (req, res, next) => {
 });
 
 // GET route to retrieve and display all the movies
-router.get('/movies', (req, res, next) => {
+router.get('/movies', isLoggedIn, (req, res, next) => {
     Movie.find()
       .then(allTheMoviesFromDB => {
         console.log('Retrieved movies from DB:', allTheMoviesFromDB);
@@ -70,7 +72,7 @@ router.get('/movies', (req, res, next) => {
   });
 
 // GET route for displaying the movie details page
-router.get('/movies/:id', (req, res, next) => {
+router.get('/movies/:id', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
  
   Movie.findById(id)

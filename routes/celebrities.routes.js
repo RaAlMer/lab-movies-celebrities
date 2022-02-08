@@ -3,13 +3,15 @@ const router = require("express").Router();
 
 const Celebrity = require('../models/Celebrity.model.js');
 
+const { isLoggedIn, isLoggedOut } = require('../middleware/route-guard');
+
 // GET route to create a celebrity
-router.get('/celebrities/create', (req, res) => {
+router.get('/celebrities/create', isLoggedIn, (req, res) => {
     res.render('celebrities/new-celebrity.hbs');
 });
 
 // POST route to save a new celebrity to the database
-router.post('/celebrities/create', (req, res, next) => {
+router.post('/celebrities/create', isLoggedIn, (req, res, next) => {
     const { name, occupation, catchPhrase } = req.body;
     Celebrity.create({ name, occupation, catchPhrase })
         .then(() => res.redirect('/celebrities'))
@@ -17,7 +19,7 @@ router.post('/celebrities/create', (req, res, next) => {
 });
 
 // GET route to update a specific celebrity
-router.get('/celebrities/:id/edit', (req, res, next) => {
+router.get('/celebrities/:id/edit', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
  
   Celebrity.findById(id)
@@ -27,7 +29,7 @@ router.get('/celebrities/:id/edit', (req, res, next) => {
 });
 
 // POST route to update a specific celebrity
-router.post('/celebrities/:id/edit', (req, res, next) => {
+router.post('/celebrities/:id/edit', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
   const { name, occupation, catchPhrase } = req.body;
  
@@ -37,7 +39,7 @@ router.post('/celebrities/:id/edit', (req, res, next) => {
 });
 
 // POST route to delete a celebrity from the database
-router.post('/celebrities/:id/delete', (req, res, next) => {
+router.post('/celebrities/:id/delete', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
  
   Celebrity.findByIdAndRemove(id)
@@ -47,7 +49,7 @@ router.post('/celebrities/:id/delete', (req, res, next) => {
 
 
 // GET route to retrieve and display all the celebrities
-router.get('/celebrities', (req, res, next) => {
+router.get('/celebrities', isLoggedIn, (req, res, next) => {
     Celebrity.find()
       .then(allTheCelebritiesFromDB => {
         console.log('Retrieved celebrities from DB:', allTheCelebritiesFromDB);
@@ -61,7 +63,7 @@ router.get('/celebrities', (req, res, next) => {
   });
 
 // GET route for displaying the celebrity details page
-router.get('/celebrities/:id', (req, res, next) => {
+router.get('/celebrities/:id', isLoggedIn, (req, res, next) => {
   const { id } = req.params;
  
   Celebrity.findById(id)
